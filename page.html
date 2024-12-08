@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Lean Management - Mesure</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question p {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .options label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .btn {
+            display: inline-block;
+            margin: 10px 5px 0;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+        .justification {
+            margin-top: 5px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quiz - Mesure en Lean Management</h1>
+    <div class="quiz-container">
+        <form id="quiz-form">
+            <div class="question">
+                <p>1. Quel est l'objectif principal de la mesure en Lean Management ?</p>
+                <div class="options">
+                    <label><input type="radio" name="q1" value="correct"> Améliorer les processus et éliminer les gaspillages</label>
+                    <label><input type="radio" name="q1" value="wrong"> Réduire uniquement les coûts</label>
+                    <label><input type="radio" name="q1" value="wrong"> Augmenter la charge de travail</label>
+                </div>
+                <p class="feedback" id="feedback-q1"></p>
+                <p class="justification" id="justification-q1"></p>
+            </div>
+            <div class="question">
+                <p>2. Lequel des outils suivants est utilisé pour mesurer la performance dans Lean ?</p>
+                <div class="options">
+                    <label><input type="radio" name="q2" value="correct"> Diagramme de flux de valeur</label>
+                    <label><input type="radio" name="q2" value="wrong"> Brainstorming</label>
+                    <label><input type="radio" name="q2" value="wrong"> Mind Mapping</label>
+                </div>
+                <p class="feedback" id="feedback-q2"></p>
+                <p class="justification" id="justification-q2"></p>
+            </div>
+            <div class="question">
+                <p>3. Que signifie l'indicateur KPI en Lean Management ?</p>
+                <div class="options">
+                    <label><input type="radio" name="q3" value="wrong"> Key Processing Information</label>
+                    <label><input type="radio" name="q3" value="correct"> Key Performance Indicator</label>
+                    <label><input type="radio" name="q3" value="wrong"> Key Project Insight</label>
+                </div>
+                <p class="feedback" id="feedback-q3"></p>
+                <p class="justification" id="justification-q3"></p>
+            </div>
+            <button type="button" class="btn" onclick="submitQuiz()">Soumettre</button>
+            <button type="button" class="btn" onclick="resetQuiz()">Réessayer</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function submitQuiz() {
+            const form = document.getElementById('quiz-form');
+            const resultDiv = document.getElementById('result');
+            let score = 0;
+            const totalQuestions = 3;
+
+            // Justifications
+            const justifications = {
+                q1: {
+                    correct: "La mesure en Lean Management vise à améliorer les processus et éliminer les gaspillages pour maximiser la valeur pour le client.",
+                    wrong: "La réduction des coûts et l'augmentation de la charge de travail ne sont pas les objectifs principaux de Lean Management."
+                },
+                q2: {
+                    correct: "Le diagramme de flux de valeur est un outil clé utilisé pour analyser et améliorer les processus en Lean.",
+                    wrong: "Brainstorming et Mind Mapping ne sont pas spécifiques à Lean Management."
+                },
+                q3: {
+                    correct: "KPI signifie Key Performance Indicator, qui mesure la performance des processus et leur contribution aux objectifs.",
+                    wrong: "Les autres termes proposés ne sont pas corrects en Lean Management."
+                }
+            };
+
+            // Clear previous feedback
+            document.querySelectorAll('.feedback, .justification').forEach(el => {
+                el.textContent = '';
+                el.classList.remove('correct', 'incorrect');
+            });
+
+            // Vérifie les réponses
+            const questions = [
+                { name: 'q1', correct: 'correct', feedbackId: 'feedback-q1', justificationId: 'justification-q1' },
+                { name: 'q2', correct: 'correct', feedbackId: 'feedback-q2', justificationId: 'justification-q2' },
+                { name: 'q3', correct: 'correct', feedbackId: 'feedback-q3', justificationId: 'justification-q3' }
+            ];
+
+            questions.forEach(question => {
+                const selectedOption = form.querySelector(`input[name="${question.name}"]:checked`);
+                const feedbackElement = document.getElementById(question.feedbackId);
+                const justificationElement = document.getElementById(question.justificationId);
+
+                if (!selectedOption) {
+                    feedbackElement.textContent = 'Vous n’avez pas répondu à cette question.';
+                    feedbackElement.classList.add('incorrect');
+                } else if (selectedOption.value === question.correct) {
+                    score++;
+                    feedbackElement.textContent = 'Bonne réponse !';
+                    feedbackElement.classList.add('correct');
+                    justificationElement.textContent = justifications[question.name].correct;
+                } else {
+                    feedbackElement.textContent = 'Mauvaise réponse.';
+                    feedbackElement.classList.add('incorrect');
+                    justificationElement.textContent = justifications[question.name].wrong;
+                }
+            });
+
+            resultDiv.textContent = `Votre score : ${score}/${totalQuestions}`;
+            resultDiv.style.color = score === totalQuestions ? "green" : "red";
+        }
+
+        function resetQuiz() {
+            const form = document.getElementById('quiz-form');
+            form.reset();
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = '';
+            document.querySelectorAll('.feedback, .justification').forEach(el => {
+                el.textContent = '';
+                el.classList.remove('correct', 'incorrect');
+            });
+        }
+    </script>
+</body>
+</html>
